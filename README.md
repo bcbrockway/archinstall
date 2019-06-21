@@ -11,11 +11,12 @@ Do the following locally on the machine itself:
 
 ### SSH Steps
 
-Get a UK-only mirrorlist for pacman:
-
 ```bash
+# Configure UK keyboard
 loadkeys uk
+# Setup NTP
 timedatectl set-ntp true
+# Partition, format and mount the disk
 (
 echo n # add a new partition
 echo p # primary partition
@@ -26,11 +27,16 @@ echo w # write and exit
 ) | fdisk /dev/sda
 mkfs.ext4 /dev/sda1
 mount /dev/sda1 /mnt
+# Get an up-to-date, UK-specific mirrorlist for pacman
 wget https://www.archlinux.org/mirrorlist/\?country\=GB\&protocol\=http\&protocol\=https\&ip_version\=4\&use_mirror_status\=on -O /etc/pacman.d/mirrorlist
+# Install Arch on the mount partition
 pacstrap /mnt base
+# Create an fstab file
 genfstab -U /mnt >> /mnt/etc/fstab
+# Make /mnt the root partition
 arch-chroot /mnt
-
+# Download git, clone this repo, and run the install script
 pacman -Sy git --noconfirm
-git clone git@github.com:bcbrockway/archinstall.git
+cd /tmp && git clone git@github.com:bcbrockway/archinstall.git
+cd archinstall && ./init-vm.sh
 ```
