@@ -37,6 +37,6 @@ genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
 # Download git, clone this repo, and run the install script
 pacman -Sy git --noconfirm
-cd /tmp && git clone git@github.com:bcbrockway/archinstall.git
+cd /tmp && git clone https://github.com/bcbrockway/archinstall.git
 cd archinstall && ./init-vm.sh
 ```
