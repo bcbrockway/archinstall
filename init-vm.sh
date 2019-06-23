@@ -29,11 +29,19 @@ echo "::1       localhost" >> /etc/hosts
 echo "127.0.1.1 ${HOSTNAME}.localdomain ${HOSTNAME}" >> /etc/hosts
 
 # NETWORK CONFIG HERE
+pacman -Sy --needed --noconfirm openssh
+systemctl enable sshd
+sed -i 's/#\(PermitRootLogin\).*/\1 yes/' /etc/ssh/sshd_config
 
 echo "Setting up boot manager"
 
-pacman -Sy --needed --noconfirm grub intel-ucode
+pacman -S --needed --noconfirm grub intel-ucode
 if [[ ! -d /boot/grub ]]; then
   grub-install --target=i386-pc /dev/sda
 fi
 grub-mkconfig -o /boot/grub/grub.cfg
+
+passwd
+
+# Undo this at the end:
+# sed -i 's/#\(PermitRootLogin\).*/\1 yes/' /etc/ssh/sshd_config
