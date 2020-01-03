@@ -13,7 +13,7 @@ KEYMAP="uk"
 function aur-get {
   local package; package=$1
 
-  if ! pacman -Qi "$package" > /dev/null; then
+  if ! pacman -Qi "$package" > /dev/null 2>&1; then
     echo "Installing package: $package"
     sudo -u $USERNAME yay -S -a --answerdiff N --answerclean A --noconfirm "$package"
   else
@@ -34,7 +34,7 @@ function key-value {
 }
 
 echo "Checking for username: $USERNAME"
-if ! grep ${USERNAME} /etc/passwd; then
+if ! grep ${USERNAME} /etc/passwd > /dev/null; then
   echo "Setting up ${USERNAME}"
   useradd -G wheel -m ${USERNAME}
 fi
@@ -68,7 +68,7 @@ pacman -Sy --needed --noconfirm --quiet \
   vim \
   xorg
 
-if ! yay; then
+if ! pacman -Qi yay > /dev/null; then
   echo "Installing yay"
   pacman -S --needed --noconfirm base-devel
   YAYDIR=$(mktemp -u)
@@ -80,11 +80,11 @@ if ! yay; then
 fi
 
 echo "Setting up git"
-if ! git config --global user.name; then
-  git config --global user.name "$FULL_NAME"
+if ! sudo -u $USERNAME git config --global user.name; then
+  sudo -u $USERNAME git config --global user.name "$FULL_NAME"
 fi
-if ! git config --global user.email; then
-  git config --global user.email "$EMAIL_ADDRESS"
+if ! sudo -u $USERNAME git config --global user.email; then
+  sudo -u $USERNAME git config --global user.email "$EMAIL_ADDRESS"
 fi
 
 aur-get google-chrome
