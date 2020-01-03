@@ -33,44 +33,8 @@ function key-value {
   fi
 }
 
-echo "Checking for username: $USERNAME"
-if ! grep ${USERNAME} /etc/passwd > /dev/null; then
-  echo "Setting up ${USERNAME}"
-  useradd -G wheel -m ${USERNAME}
-fi
-
-echo "Checking sudo permissions"
-if grep -P '^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)' /etc/sudoers; then
-  echo "Giving wheel group sudo permissions"
-  sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
-fi
-
-echo "Checking console settings"
-key-value FONT $TERMINAL_FONT /etc/vconsole.conf
-key-value KEYMAP $KEYMAP /etc/vconsole.conf
-echo "Contents of /etc/vconsole.conf:"
-cat /etc/vconsole.conf
-
-echo "Installing packages"
-pacman -Sy --needed --noconfirm --quiet \
-  bluez \
-  blueman \
-  dmenu \
-  git \
-  go \
-  i3-wm \
-  i3lock \
-  i3status \
-  networkmanager \
-  python \
-  stow \
-  terminator \
-  vim \
-  xorg
-
 if ! pacman -Qi yay > /dev/null; then
   echo "Installing yay"
-  pacman -S --needed --noconfirm base-devel
   YAYDIR=$(mktemp -u)
   git clone https://aur.archlinux.org/yay.git "${YAYDIR}"
   chmod 777 "$YAYDIR"
@@ -87,7 +51,21 @@ if ! sudo -u $USERNAME git config --global user.email; then
   sudo -u $USERNAME git config --global user.email "$EMAIL_ADDRESS"
 fi
 
-aur-get google-chrome
-aur-get insync
-aur-get oh-my-zsh-git
 aur-get vim-plug
+aur-get oh-my-zsh-git
+if [[ $SHELL != /bin/zsh ]]; then
+  chsh -s /bin/zsh
+fi
+
+###########
+# Cursors #
+###########
+aur-get breeze-adapta-cursor-theme-git
+sudo cat <<EOF >/usr/share/icons/default/index.theme
+[Icon Theme]
+Inherits=Breeze-Adapta-Cursor
+EOF
+
+aur-get google-chrome
+aur-get google-cloud-sdk
+aur-get insync
