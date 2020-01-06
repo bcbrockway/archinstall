@@ -68,6 +68,15 @@ function copy {
   fi
 }
 
+function snap_install {
+  local package; package=$1
+  local opts; opts="${@:2}"
+
+  if ! snap list $package >/dev/null; then
+    snap install $package $opts
+  fi
+}
+
 ########
 # User #
 ########
@@ -101,6 +110,7 @@ cat /etc/vconsole.conf
 
 echo "Installing packages"
 pacman -Sy --needed --noconfirm --quiet \
+  arandr \
   base-devel \
   bluez \
   blueman \
@@ -113,10 +123,14 @@ pacman -Sy --needed --noconfirm --quiet \
   i3status \
   kubectl \
   light \
+  lightdm \
   man \
   mesa \
   mlocate \
   networkmanager \
+  pasystray \
+  pulseaudio \
+  pulseaudio-bluetooth \
   python \
   stow \
   terminator \
@@ -133,6 +147,7 @@ pacman -Sy --needed --noconfirm --quiet \
   xorg-server \
   xorg-xrandr \
   xorg-xrdb \
+  yubico-pam \
   zsh
 
 ################
@@ -154,12 +169,34 @@ require_aur breeze-adapta-cursor-theme-git
 require_aur google-chrome
 require_aur google-cloud-sdk
 require_aur insync
+require_aur lightdm-slick-greeter
+require_aur snapd
 require_aur vim-plug
+require_aur zoom
+
+#################
+# Snap Packages #
+#################
+if ! systemctl is-active --quiet snapd.socket; then
+  systemctl enable --now snapd.socket
+fi
+if [[ ! -h /snap ]]; then
+  ln -s /var/lib/snapd/snap /snap
+  echo "Snap needs to reboot your system. Ok? [y/n]: "
+  read -n1 ans
+  if [[ $ans =~ [Yy] ]]; then
+    reboot
+  else
+    touch /tmp/REBOOT_REQUIRED
+  fi
+fi
+if [[ ! -f /tmp/REBOOT_REQUIRED ]]; then
+  snap_install goland --classic
+fi
 
 #####################
 # Hardware Settings #
 #####################
-
 copy etc/udev/rules.d/backlight.rules
 copy etc/X11/xorg.conf.d/00-keyboard.conf
 copy etc/X11/xorg.conf.d/30-touchpad.conf
@@ -176,6 +213,10 @@ fi
 if ! git config --global user.email > /dev/null; then
   echo "Setting git user email"
   git config --global user.email "$EMAIL_ADDRESS"
+fi
+if ! git config --global core.excludesfile >/dev/null; then
+  echo "Setting git core excludesfile"
+  git config --global core.excludesfile ~/.gitignore
 fi
 EOF
 
@@ -201,3 +242,10 @@ EOF
 ###########
 copy usr/share/icons/default/index.theme
 
+###########
+# lightdm #
+###########
+copy etc/lightdm/lightdm.conf
+
+popd
+echo "Script complete"
