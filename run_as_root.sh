@@ -10,7 +10,7 @@ TERMINAL_FONT="ter-v32n"
 KEYMAP="uk"
 
 THISDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-pushd $THISDIR
+pushd "$THISDIR"
 
 function require_aur {
   local package; package=$1
@@ -19,7 +19,7 @@ function require_aur {
     echo "Installing package: $package"
     sudo -u $USERNAME yay -S -a --answerdiff N --answerclean A --noconfirm "$package"
   else
-    echo "Package $package is already installed. Skipping..."
+    echo "Package $package already installed. Skipping..."
   fi
 }
 
@@ -168,6 +168,7 @@ EOF
 require_aur breeze-adapta-cursor-theme-git
 require_aur google-chrome
 require_aur google-cloud-sdk
+require_aur i3lock-fancy-git
 require_aur insync
 require_aur lightdm-slick-greeter
 require_aur snapd
@@ -247,5 +248,4 @@ copy usr/share/icons/default/index.theme
 ###########
 copy etc/lightdm/lightdm.conf
 
-popd
 echo "Script complete"
