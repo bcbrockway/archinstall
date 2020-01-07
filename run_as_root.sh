@@ -174,6 +174,7 @@ require_aur google-cloud-sdk
 require_aur i3lock-fancy-git
 require_aur insync
 require_aur lightdm-slick-greeter
+require_aur python-pre-commit
 require_aur snapd
 require_aur vim-plug
 require_aur zoom
@@ -181,6 +182,7 @@ require_aur zoom
 #################
 # Snap Packages #
 #################
+echo "Snap config"
 if ! systemctl is-active --quiet snapd.socket; then
   systemctl enable --now snapd.socket
 fi
@@ -201,6 +203,7 @@ fi
 #####################
 # Hardware Settings #
 #####################
+echo "Checking hardware config"
 copy etc/udev/rules.d/backlight.rules
 copy etc/X11/xorg.conf.d/00-keyboard.conf
 copy etc/X11/xorg.conf.d/30-touchpad.conf
@@ -208,6 +211,7 @@ copy etc/X11/xorg.conf.d/30-touchpad.conf
 #######
 # Git #
 #######
+echo "Checking git config"
 sudo -u $USERNAME bash <<EOF
 git config --global user.name "$FULL_NAME"
 git config --global user.email "$EMAIL_ADDRESS"
@@ -217,14 +221,11 @@ EOF
 #############
 # Oh My Zsh #
 #############
-su -l $USERNAME <<'EOF'
+echo "Checking zsh config"
+sudo -u $USERNAME bash <<'EOF'
 if [[ ! -d ~/.oh-my-zsh ]]; then
   echo "Setting up Oh My Zsh"
-  OMZDIR=$(mktemp)
-  pushd $OMZDIR
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > install.sh
-  sh install.sh
-  popd
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 if [[ $SHELL != /bin/zsh ]]; then
   chsh -s /bin/zsh
@@ -234,11 +235,13 @@ EOF
 ###########
 # Cursors #
 ###########
+echo "Checking cursor config"
 copy usr/share/icons/default/index.theme
 
 ###########
 # lightdm #
 ###########
+echo "Checking display manager config"
 copy etc/lightdm/lightdm.conf
 
 echo "Script complete"
