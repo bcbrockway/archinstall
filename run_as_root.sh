@@ -112,6 +112,7 @@ pacman -Sy --needed --noconfirm --quiet \
   blueman \
   curl \
   dmenu \
+  fwupd \
   git \
   go \
   i3-wm \
@@ -148,6 +149,7 @@ pacman -Sy --needed --noconfirm --quiet \
   xorg-server \
   xorg-xrandr \
   xorg-xrdb \
+  yamllint \
   yubico-pam \
   zsh
 
@@ -178,6 +180,7 @@ require_aur lightdm-slick-greeter
 require_aur python-pre-commit
 require_aur snapd
 require_aur vim-plug
+require_aur yq-bin
 require_aur zoom
 
 #################
