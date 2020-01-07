@@ -119,6 +119,7 @@ pacman -Sy --needed --noconfirm --quiet \
   i3lock \
   i3status \
   git-crypt \
+  jq \
   kubectl \
   light \
   lightdm \
