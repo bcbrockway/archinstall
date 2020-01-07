@@ -89,11 +89,7 @@ fi
 ###########
 # Sudoers #
 ###########
-echo "Checking sudo permissions"
-if grep -P '^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)' /etc/sudoers; then
-  echo "Giving wheel group sudo permissions"
-  sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
-fi
+sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
 
 ###########
 # Console #
@@ -121,6 +117,7 @@ pacman -Sy --needed --noconfirm --quiet \
   i3-wm \
   i3lock \
   i3status \
+  git-crypt \
   kubectl \
   light \
   lightdm \
@@ -128,10 +125,13 @@ pacman -Sy --needed --noconfirm --quiet \
   mesa \
   mlocate \
   networkmanager \
+  network-manager-applet \
   pasystray \
   pulseaudio \
   pulseaudio-bluetooth \
   python \
+  openssh \
+  rsync \
   stow \
   terminator \
   tree \
@@ -150,20 +150,23 @@ pacman -Sy --needed --noconfirm --quiet \
   yubico-pam \
   zsh
 
+systemctl enable lightdm --now
+systemctl enable sshd --now
+systemctl enable NetworkManager --now
+
 ################
 # AUR Packages #
 ################
 
-su -l $USERNAME <<'EOF'
 if ! pacman -Qi yay > /dev/null; then
   echo "Installing yay"
   YAYDIR=$(mktemp -u)
   git clone https://aur.archlinux.org/yay.git "${YAYDIR}"
+  chmod 777 "$YAYDIR"
   pushd "$YAYDIR"
-  makepkg -si --noconfirm
+  sudo -u $USERNAME makepkg -si --noconfirm
   popd
 fi
-EOF
 
 require_aur breeze-adapta-cursor-theme-git
 require_aur google-chrome
@@ -205,20 +208,10 @@ copy etc/X11/xorg.conf.d/30-touchpad.conf
 #######
 # Git #
 #######
-
-su -l $USERNAME <<'EOF'
-if ! git config --global user.name > /dev/null; then
-  echo "Setting git user name"
-  git config --global user.name "$FULL_NAME"
-fi
-if ! git config --global user.email > /dev/null; then
-  echo "Setting git user email"
-  git config --global user.email "$EMAIL_ADDRESS"
-fi
-if ! git config --global core.excludesfile >/dev/null; then
-  echo "Setting git core excludesfile"
-  git config --global core.excludesfile ~/.gitignore
-fi
+sudo -u $USERNAME bash <<EOF
+git config --global user.name "$FULL_NAME"
+git config --global user.email "$EMAIL_ADDRESS"
+git config --global core.excludesfile ~/.gitignore-global
 EOF
 
 #############
@@ -229,7 +222,7 @@ if [[ ! -d ~/.oh-my-zsh ]]; then
   echo "Setting up Oh My Zsh"
   OMZDIR=$(mktemp)
   pushd $OMZDIR
-  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+  curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > install.sh
   sh install.sh
   popd
 fi
