@@ -112,6 +112,8 @@ pacman -Sy --needed --noconfirm --quiet \
   blueman \
   curl \
   dmenu \
+  docker \
+  docker-compose \
   fwupd \
   git \
   go \
@@ -141,6 +143,7 @@ pacman -Sy --needed --noconfirm --quiet \
   ttf-dejavu \
   udiskie \
   unzip \
+  vault \
   vim \
   virtualbox \
   wget \
@@ -157,6 +160,11 @@ pacman -Sy --needed --noconfirm --quiet \
 systemctl enable lightdm --now
 systemctl enable sshd --now
 systemctl enable NetworkManager --now
+systemctl enable docker --now
+
+if ! id -nG $USERNAME | grep -qw docker; then
+  usermod -G docker -a $USERNAME
+fi
 
 ################
 # AUR Packages #
