@@ -130,6 +130,7 @@ pacman -Sy --needed --noconfirm --quiet \
   pulseaudio \
   pulseaudio-bluetooth \
   python \
+  python-toml \
   openssh \
   rsync \
   stow \
