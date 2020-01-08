@@ -125,6 +125,7 @@ pacman -Sy --needed --noconfirm --quiet \
   git-crypt \
   jq \
   kubectl \
+  kubectx \
   libnotify \
   light \
   lightdm \
@@ -226,6 +227,18 @@ copy etc/udev/rules.d/backlight.rules
 copy etc/X11/xorg.conf.d/00-keyboard.conf
 copy etc/X11/xorg.conf.d/30-touchpad.conf
 
+###########
+# Cursors #
+###########
+echo "Checking cursor config"
+copy usr/share/icons/default/index.theme
+
+###########
+# lightdm #
+###########
+echo "Checking display manager config"
+copy etc/lightdm/lightdm.conf
+
 #######
 # Git #
 #######
@@ -249,17 +262,5 @@ if [[ $SHELL != /bin/zsh ]]; then
   chsh -s /bin/zsh
 fi
 EOF
-
-###########
-# Cursors #
-###########
-echo "Checking cursor config"
-copy usr/share/icons/default/index.theme
-
-###########
-# lightdm #
-###########
-echo "Checking display manager config"
-copy etc/lightdm/lightdm.conf
 
 echo "Script complete"
