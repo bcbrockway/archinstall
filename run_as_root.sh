@@ -106,6 +106,7 @@ cat /etc/vconsole.conf
 
 echo "Installing packages"
 pacman -Sy --needed --noconfirm --quiet \
+  ack \
   arandr \
   base-devel \
   bluez \
@@ -114,6 +115,7 @@ pacman -Sy --needed --noconfirm --quiet \
   dmenu \
   docker \
   docker-compose \
+  feh \
   fwupd \
   git \
   go \
@@ -123,6 +125,7 @@ pacman -Sy --needed --noconfirm --quiet \
   git-crypt \
   jq \
   kubectl \
+  libnotify \
   light \
   lightdm \
   man \
@@ -130,6 +133,7 @@ pacman -Sy --needed --noconfirm --quiet \
   mlocate \
   networkmanager \
   network-manager-applet \
+  notification-daemon \
   pasystray \
   pulseaudio \
   pulseaudio-bluetooth \
