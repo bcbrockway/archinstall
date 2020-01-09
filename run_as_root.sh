@@ -110,6 +110,7 @@ pacman -Sy --needed --noconfirm --quiet \
   arandr \
   base-devel \
   bluez \
+  bluez-utils \
   blueman \
   curl \
   dmenu \
@@ -162,6 +163,7 @@ pacman -Sy --needed --noconfirm --quiet \
   yubico-pam \
   zsh
 
+systemctl enable bluetooth --now
 systemctl enable lightdm --now
 systemctl enable sshd --now
 systemctl enable NetworkManager --now
