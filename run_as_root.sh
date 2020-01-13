@@ -195,10 +195,13 @@ require_aur insync
 require_aur lightdm-slick-greeter
 require_aur python-pre-commit
 require_aur snapd
+require_aur systemd-numlockontty
 require_aur terraform-docs-bin
 require_aur vim-plug
 require_aur yq-bin
 require_aur zoom
+
+systemctl enable numLockOnTty --now
 
 #################
 # Snap Packages #
