@@ -137,8 +137,10 @@ pacman -Sy --needed --noconfirm --quiet \
   network-manager-applet \
   notification-daemon \
   pasystray \
+  pbzip2 \
   pulseaudio \
   pulseaudio-bluetooth \
+  pigz \
   python \
   python-toml \
   openssh \
@@ -156,13 +158,14 @@ pacman -Sy --needed --noconfirm --quiet \
   wget \
   xf86-input-libinput \
   xf86-video-intel \
-  xf86-video-nouveau \
   xorg-server \
   xorg-xrandr \
   xorg-xrdb \
+  xz \
   yamllint \
   yubico-pam \
-  zsh
+  zsh \
+  zstd
 
 systemctl enable bluetooth --now
 systemctl enable lightdm --now
@@ -188,12 +191,16 @@ if ! pacman -Qi yay > /dev/null; then
   popd
 fi
 
+# Add multithreading support to makepkg
+copy etc/makepkg.conf
+
 require_aur breeze-adapta-cursor-theme-git
 require_aur google-chrome
 require_aur google-cloud-sdk
 require_aur i3lock-fancy-git
 require_aur insync
 require_aur lightdm-slick-greeter
+require_aur mysql-clients57
 require_aur python-pre-commit
 require_aur snapd
 require_aur systemd-numlockontty
