@@ -152,6 +152,7 @@ pacman -Sy --needed --noconfirm --quiet \
   vault \
   vim \
   virtualbox \
+  virtualbox-host-modules-arch \
   wget \
   xf86-input-libinput \
   xf86-video-intel \
