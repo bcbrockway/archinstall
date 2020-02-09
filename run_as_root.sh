@@ -2,103 +2,10 @@
 
 set -e
 
-FULL_NAME="Bobby Brockway"
-EMAIL_ADDRESS="bbrockway@mintel.com"
-
-USERNAME="bbrockway"
-TERMINAL_FONT="ter-v32n"
-KEYMAP="uk"
-
 THISDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-pushd "$THISDIR"
+cd "$THISDIR"
 
-function require_aur {
-  local package; package=$1
-  
-  if ! pacman -Qi "$package" > /dev/null 2>&1; then
-    echo "Installing package: $package"
-    sudo -u $USERNAME yay -S -a --answerdiff N --answerclean A --noconfirm "$package"
-  else
-    echo "Package $package already installed. Skipping..."
-  fi
-}
-
-function key_value {
-  local key; key=$1
-  local value; value=$2
-  local filename; filename=$3
-
-  if grep -P "^$key=" $filename > /dev/null; then
-    sed --in-place "s/^$key=.*/$key=$value/" $filename
-  else
-    echo "$key=$value" >> $filename
-  fi
-}
-
-function copy {
-  local src; src=$1
-  local dst
-
-  if [[ $src =~ ^(\.\.|~|/) ]]; then
-    echo "src references file outside this context ($src)"
-    return 10
-  fi
-  if [[ ! -e $src ]]; then
-    echo "src file does not exist ($src)"
-    return 11
-  fi
-  
-  dst=/$src
-  
-  if [[ -e $dst ]]; then
-    if ! diff $dst $src; then
-      echo "File $dst exists and is different. What would you like to do?"
-      echo -n "[r]eplace [s]kip (default) [a]bort: "
-      read -n 1 ans
-      if [[ $ans == "r" ]]; then
-        cp -r $src $dst
-      elif [[ $ans == "s" ]] || [[ -z $ans ]]; then
-        return 0
-      elif [[ $ans == "a" ]]; then
-        exit 1
-      fi
-    fi
-  else
-    cp -r $src $dst
-  fi
-}
-
-function snap_install {
-  local package; package=$1
-  local opts; opts="${@:2}"
-
-  if ! snap list $package >/dev/null; then
-    snap install $package $opts
-  fi
-}
-
-########
-# User #
-########
-echo "Checking for username: $USERNAME"
-if ! grep ${USERNAME} /etc/passwd > /dev/null; then
-  echo "Setting up ${USERNAME}"
-  useradd -G wheel,video -m ${USERNAME}
-fi
-
-###########
-# Sudoers #
-###########
-sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers
-
-###########
-# Console #
-###########
-echo "Checking console settings"
-key_value FONT $TERMINAL_FONT /etc/vconsole.conf
-key_value KEYMAP $KEYMAP /etc/vconsole.conf
-echo "Contents of /etc/vconsole.conf:"
-cat /etc/vconsole.conf
+source common.sh
 
 #################
 # Core Packages #
@@ -112,6 +19,7 @@ pacman -Sy --needed --noconfirm --quiet \
   bluez \
   bluez-utils \
   blueman \
+  chromium \
   curl \
   dmenu \
   docker \
@@ -129,7 +37,6 @@ pacman -Sy --needed --noconfirm --quiet \
   kubectx \
   libnotify \
   light \
-  lightdm \
   man \
   mesa \
   mlocate \
@@ -168,7 +75,6 @@ pacman -Sy --needed --noconfirm --quiet \
   zstd
 
 systemctl enable bluetooth --now
-systemctl enable lightdm --now
 systemctl enable sshd --now
 systemctl enable NetworkManager --now
 systemctl enable docker --now
@@ -181,35 +87,16 @@ fi
 # AUR Packages #
 ################
 
-if ! pacman -Qi yay > /dev/null; then
-  echo "Installing yay"
-  YAYDIR=$(mktemp -u)
-  git clone https://aur.archlinux.org/yay.git "${YAYDIR}"
-  chmod 777 "$YAYDIR"
-  pushd "$YAYDIR"
-  sudo -u $USERNAME makepkg -si --noconfirm
-  popd
-fi
-
-# Add multithreading support to makepkg
-copy etc/makepkg.conf
-
 require_aur breeze-adapta-cursor-theme-git
-require_aur google-chrome
 require_aur google-cloud-sdk
 require_aur i3lock-fancy-git
 require_aur insync
-require_aur lightdm-slick-greeter
-require_aur mysql-clients57
 require_aur python-pre-commit
 require_aur snapd
-require_aur systemd-numlockontty
 require_aur terraform-docs-bin
 require_aur vim-plug
 require_aur yq-bin
 require_aur zoom
-
-systemctl enable numLockOnTty --now
 
 #################
 # Snap Packages #
@@ -232,25 +119,11 @@ if [[ ! -f /tmp/REBOOT_REQUIRED ]]; then
   snap_install goland --classic
 fi
 
-#####################
-# Hardware Settings #
-#####################
-echo "Checking hardware config"
-copy etc/udev/rules.d/backlight.rules
-copy etc/X11/xorg.conf.d/00-keyboard.conf
-copy etc/X11/xorg.conf.d/30-touchpad.conf
-
 ###########
 # Cursors #
 ###########
 echo "Checking cursor config"
 copy usr/share/icons/default/index.theme
-
-###########
-# lightdm #
-###########
-echo "Checking display manager config"
-copy etc/lightdm/lightdm.conf
 
 #######
 # Git #
