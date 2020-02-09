@@ -9,6 +9,7 @@ source common.sh
 
 # Initial packages
 pacman -Sy --needed --noconfirm --quiet \
+  intel-ucode \
   linux-firmware \
   networkmanager \
   sudo \

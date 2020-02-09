@@ -17,6 +17,8 @@ pacman -S openssh
 systemctl start sshd
 passwd
 
+## At this point you can ssh in from somewhere else which will help with copy/pasting
+
 ## Partition everything with gdisk
 cat /proc/partitions
 gdisk /dev/nvme0n1
@@ -27,7 +29,7 @@ cryptsetup open /dev/nvme0n1p2 cryptroot
 mkfs.ext4 /dev/mapper/cryptroot
 mount /dev/mapper/cryptroot /mnt
 mkdir /mnt/boot
-mount /dev/nvme0n1p1 /mnt/boot  # <-- EFI partition created by Windows
+mount /dev/nvme0n1p1 /mnt/boot
 
 ## Install Arch
 pacstrap /mnt git
@@ -49,20 +51,10 @@ cd entries
 cat <<EOF > arch.conf
 title Arch Linux
 linux /vmlinuz-linux
+initrd /intel-ucode.img
 initrd /initramfs-linux.img
 options cryptdevice=UUID=<UUID_OF_nvme0n1p2>:cryptroot resume=/dev/mapper/cryptroot root=/dev/mapper/cryptroot rw quiet
 EOF
 ## Get the UUID with :r !blkid
 exit
 reboot
-
-## Configure HiDPI display
-cat <<EOF >/home/${NEWUSER}/.Xresources
-Xft.dpi: 192
-Xft.autohint: 0
-Xft.lcdfilter:  lcddefault
-Xft.hintstyle:  hintfull
-Xft.hinting: 1
-Xft.antialias: 1
-Xft.rgba: rgb
-EOF
