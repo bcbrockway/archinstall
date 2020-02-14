@@ -6,18 +6,24 @@ ip link set wlp58s0 up
 wpa_supplicant -B -i wlp58s0 -c <(wpa_passphrase XXXXX XXXXX)
 dhcpcd wlp58s0
 
-## Update /etc/pacman.d/mirrorlist
+## Update system time
+timedatectl set-ntp true
 
-## Get larger screen font
-pacman -Sy terminus-font
-setfont ter-v32n
+## Update /etc/pacman.d/mirrorlist
+vim /etc/pacman.d/mirrorlist
 
 ## Enable SSH
 pacman -S openssh
 systemctl start sshd
 passwd
 
-## At this point you can ssh in from somewhere else which will help with copy/pasting
+## Get larger screen font
+pacman -Sy terminus-font
+setfont ter-v32n
+
+########################################################################################
+## At this point you can ssh in from somewhere else which will help with copy/pasting ##
+########################################################################################
 
 ## Partition everything with gdisk
 cat /proc/partitions
@@ -32,8 +38,16 @@ mkdir /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 
 ## Install Arch
-pacstrap /mnt git
+pacstrap /mnt base base-devel linux linux-firmware git
+
+## Generate fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Switch to new / dir
 arch-chroot /mnt
+
+# Set root password
+passwd
 
 ## Get this repo and run console.sh
 git clone https://github.com/bcbrockway/archinstall.git
