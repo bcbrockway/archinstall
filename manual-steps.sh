@@ -38,7 +38,7 @@ mkdir /mnt/boot
 mount /dev/nvme0n1p1 /mnt/boot
 
 ## Install Arch
-pacstrap /mnt base base-devel linux linux-firmware git
+pacstrap /mnt base base-devel linux linux-firmware git vim
 
 ## Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab

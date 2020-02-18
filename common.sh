@@ -7,6 +7,10 @@ export USERNAME="bbrockway"
 export TERMINAL_FONT="ter-v32n"
 export KEYMAP="uk"
 export VIDEO="intel"
+export TIMEZONE="Europe/London"
+# List locales. Primary locale should be first!
+export LOCALES=(en_GB.UTF-8 en_US.UTF-8)
+export HOSTNAME="arch-desktop"
 
 function require_aur {
   local package; package=$1
@@ -24,7 +28,7 @@ function key_value {
   local value; value=$2
   local filename; filename=$3
 
-  if grep -P "^$key=" $filename > /dev/null; then
+  if grep -P "^$key=" $filename > /dev/null 2>&1; then
     sed --in-place "s/^$key=.*/$key=$value/" $filename
   else
     echo "$key=$value" >> $filename
@@ -32,16 +36,17 @@ function key_value {
 }
 
 function copy {
+  export COPIED=false
   local src; src=$1
   local dst
 
   if [[ $src =~ ^(\.\.|~|/) ]]; then
     echo "src references file outside this context ($src)"
-    return 10
+    exit 1
   fi
   if [[ ! -e $src ]]; then
     echo "src file does not exist ($src)"
-    return 11
+    exit 1
   fi
 
   dst=/$src
@@ -53,6 +58,8 @@ function copy {
       read -n 1 ans
       if [[ $ans == "r" ]]; then
         cp -r $src $dst
+	COPIED=true
+	return 0
       elif [[ $ans == "s" ]] || [[ -z $ans ]]; then
         return 0
       elif [[ $ans == "a" ]]; then
@@ -61,6 +68,8 @@ function copy {
     fi
   else
     cp -r $src $dst
+    COPIED=true
+    return 0
   fi
 }
 
@@ -72,3 +81,5 @@ function snap_install {
     snap install $package $opts
   fi
 }
+
+pacman -Sy
