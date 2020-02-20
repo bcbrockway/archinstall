@@ -12,7 +12,7 @@ source common.sh
 #################
 
 echo "Installing packages"
-pacman -Sy --needed --noconfirm --quiet \
+pacman -Su --needed --noconfirm --quiet \
   ack \
   arandr \
   base-devel \
@@ -95,29 +95,8 @@ require_aur python-pre-commit
 require_aur snapd
 require_aur terraform-docs-bin
 require_aur vim-plug
-require_aur yq-bin
+#require_aur yq-bin
 require_aur zoom
-
-#################
-# Snap Packages #
-#################
-echo "Snap config"
-if ! systemctl is-active --quiet snapd.socket; then
-  systemctl enable --now snapd.socket
-fi
-if [[ ! -h /snap ]]; then
-  ln -s /var/lib/snapd/snap /snap
-  echo "Snap needs to reboot your system. Ok? [y/n]: "
-  read -n1 ans
-  if [[ $ans =~ [Yy] ]]; then
-    reboot
-  else
-    touch /tmp/REBOOT_REQUIRED
-  fi
-fi
-if [[ ! -f /tmp/REBOOT_REQUIRED ]]; then
-  snap_install goland --classic
-fi
 
 ###########
 # Cursors #
@@ -144,9 +123,31 @@ if [[ ! -d ~/.oh-my-zsh ]]; then
   echo "Setting up Oh My Zsh"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
-if [[ $SHELL != /bin/zsh ]]; then
-  chsh -s /bin/zsh
-fi
+#if [[ $SHELL != /bin/zsh ]]; then
+#  chsh -s /bin/zsh
+#fi
 EOF
+
+#################
+# Snap Packages #
+#################
+echo "Snap config"
+if ! systemctl is-active --quiet snapd.socket; then
+  systemctl enable --now snapd.socket
+fi
+if [[ ! -h /snap ]]; then
+  ln -s /var/lib/snapd/snap /snap
+  echo "Snap needs to reboot your system. Ok? [y/n]: "
+  read -n1 ans
+  if [[ $ans =~ [Yy] ]]; then
+    reboot
+  else
+    touch /tmp/REBOOT_REQUIRED
+  fi
+fi
+if [[ ! -f /tmp/REBOOT_REQUIRED ]]; then
+  snap_install goland --classic
+  snap_install pycharm-community --classic
+fi
 
 echo "Script complete"

@@ -77,7 +77,7 @@ function snap_install {
   local package; package=$1
   local opts; opts="${@:2}"
 
-  if ! snap list $package >/dev/null; then
+  if ! snap list $package >/dev/null 2>&1; then
     snap install $package $opts
   fi
 }
