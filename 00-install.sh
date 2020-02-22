@@ -1,19 +1,29 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 source common.sh
 .env --file 00-install.env export
 
+if [[ "$HIDPI" == true ]]; then
+  echo "Setting console font for HiDPI"
+  pacman -Sy terminus-font
+  setfont ter-v32n
+  key_value FONT "ter-v32n" "$ARCH/etc/vconsole.conf"
+fi
+
 ## Set the keyboard layout
+echo "Setting keyboard layout"
 loadkeys "$KEYMAP"
 
 ## Verify the boot mode
+echo "Checking for EFI"
 if [[ ! -d /sys/firmware/efi ]]; then
   panic "Must boot in EFI mode!"
 fi
 
 ## Update the system clock
+echo "Enabling NTP"
 timedatectl set-ntp true
 
 ## Partition the disks
@@ -89,6 +99,7 @@ fi
 
 ## Mount the file systems
 if [[ "$MOUNTING_COMPLETE" != true ]]; then
+  echo "Mounting file systems"
   if [[ "$encrypted" == true ]]; then
     mount /dev/mapper/cryptroot "$ARCH"
   else
@@ -102,6 +113,7 @@ fi
 
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
+  echo "Installing Arch Linux"
   pacstrap "$ARCH" base base-devel linux linux-firmware networkmanager git vim intel-ucode
 fi
 
@@ -111,6 +123,7 @@ fi
 
 # Fstab
 if [[ "$GENFSTAB_COMPLETE" != true ]]; then
+  echo "Generating fstab"
   genfstab -U "$ARCH" >> "$ARCH/etc/fstab"
 fi
 
@@ -118,6 +131,7 @@ fi
 
 # Time zone
 if [[ "$TIMEZONE_COMPLETE" != true ]]; then
+  echo "Setting timezone"
   arch-chroot "$ARCH" ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
   arch-chroot "$ARCH" hwclock --systohc
 fi
@@ -126,6 +140,7 @@ fi
 
 # Localisation
 if [[ "$LOCALE_COMPLETE" != true ]]; then
+  echo "Setting localisation"
   sed -i 's/^#\('"$LOCALE"'.*\)/\1/' "$ARCH/etc/locale.gen"
   arch-chroot "$ARCH" locale-gen
   key_value LANG "$LOCALE" "$ARCH/etc/locale.conf"
@@ -136,6 +151,7 @@ fi
 
 # Network Configuration
 if [[ "$NETWORK_COMPLETE" != true ]]; then
+  echo "Setting up networking"
   echo "$HOSTNAME" > "$ARCH/etc/hostname"
   cat <<EOF > "$ARCH/etc/hosts"
 127.0.0.1  localhost
@@ -149,6 +165,7 @@ fi
 # Initramfs
 if [[ "$INITRAMFS_COMPLETE" != true ]]; then
   if [[ "$encrypted" == true ]]; then
+    echo "Running mkinitcpio"
     sed -i 's/HOOKS=.*/HOOKS="base udev autodetect keyboard keymap consolefont modconf block encrypt filesystems fsck"/' "$ARCH"/etc/mkinitcpio.conf
     arch-chroot "$ARCH" mkinitcpio -P
   fi
@@ -158,6 +175,7 @@ fi
 
 # Root password
 if [[ "$PASSWD_COMPLETE" != true ]]; then
+  echo "Changing root password"
   arch-chroot "$ARCH" passwd
 fi
 
@@ -165,6 +183,7 @@ fi
 
 # Boot loader
 if [[ "$BOOTLOADER_COMPLETE" != true ]]; then
+  echo "Installing boot loader"
   arch-chroot "$ARCH" bootctl install
   cp /usr/share/systemd/bootctl/loader.conf "$ARCH/boot/loader/"
   echo "timeout 4" >> "$ARCH/boot/loader/loader.conf"
