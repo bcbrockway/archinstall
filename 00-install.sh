@@ -149,7 +149,7 @@ fi
 # Initramfs
 if [[ "$INITRAMFS_COMPLETE" != true ]]; then
   if [[ "$encrypted" == true ]]; then
-    sed -i 's/HOOKS=.*/HOOKS="base udev autodetect keyboard keymap consolefont modconf block encrypt lvm2 filesystems fsck"/' "$ARCH"/etc/mkinitcpio.conf
+    sed -i 's/HOOKS=.*/HOOKS="base udev autodetect keyboard keymap consolefont modconf block encrypt filesystems fsck"/' "$ARCH"/etc/mkinitcpio.conf
     arch-chroot "$ARCH" mkinitcpio -P
   fi
 fi
