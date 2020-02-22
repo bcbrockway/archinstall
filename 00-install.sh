@@ -114,7 +114,7 @@ fi
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
   echo "Installing Arch Linux"
-  pacstrap "$ARCH" base base-devel linux linux-firmware networkmanager git vim intel-ucode
+  pacstrap "$ARCH" base base-devel linux linux-firmware networkmanager git vim intel-ucode sudo
 fi
 
 .env set PACSTRAP_COMPLETE=true
@@ -196,3 +196,14 @@ if [[ "$BOOTLOADER_COMPLETE" != true ]]; then
 fi
 
 .env set BOOTLOADER_COMPLETE=true
+
+arch-chroot "$ARCH" systemctl enable NetworkManager
+
+# Users and groups
+if [[ "$USER_SETUP_COMPLETE" != true ]]; then
+  echo "Setting up $USERNAME"
+  arch-chroot "$ARCH" useradd -G wheel,video -m "$USERNAME"
+  sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' "$ARCH/etc/sudoers"
+fi
+
+.env set USER_SETUP_COMPLETE=true
