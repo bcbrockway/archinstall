@@ -203,7 +203,11 @@ arch-chroot "$ARCH" systemctl enable NetworkManager
 if [[ "$USER_SETUP_COMPLETE" != true ]]; then
   echo "Setting up $USERNAME"
   arch-chroot "$ARCH" useradd -G wheel,video -m "$USERNAME"
+  arch-chroot "$ARCH" passwd "$USERNAME"
   sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' "$ARCH/etc/sudoers"
 fi
 
 .env set USER_SETUP_COMPLETE=true
+
+# Xorg
+./xorg.sh

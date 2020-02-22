@@ -4,28 +4,33 @@ set -ex
 
 source common.sh
 
-# Video drivers
+xorg_pkgs=(
+  xf86-input-libinput
+  xorg-server
+  xorg-xrandr
+  xorg-xrdb
+)
+
 case "$VIDEO" in
   nvidia)
-    video_driver=nvidia
+    xorg_pkgs+=(nvidia)
     ;;
   intel)
-    video_driver=xf86-video-intel
+    xorg_pkgs+=(xf86-video-intel)
     ;;
   vmware)
-    video_driver=xf86-video-vmware
+    xorg_pkgs+=(virtualbox-guest-utils xf86-video-vmware virtualbox-guest-modules-arch)
     ;;
   *)
     panic "Only nvidia, intel and vmware supported"
 esac
 
-pacmans \
-  "$video_driver" \
-  lightdm \
-  xf86-input-libinput \
-  xorg-server \
-  xorg-xrandr \
-  xorg-xrdb
+arch-chroot "$ARCH" pacmans "${xorg_pkgs[@]}"
+
+if [[ "$VIDEO" == vmware ]]; then
+  arch-chroot "$ARCH" systemctl enable vboxservice
+  arch-chroot "$ARCH" usermod -G vboxsf -a "$USERNAME"
+fi
 
 # Configure xorg
 copy etc/X11/xorg.conf.d/00-keyboard.conf
