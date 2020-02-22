@@ -169,7 +169,7 @@ if [[ "$BOOTLOADER_COMPLETE" != true ]]; then
   cp /usr/share/systemd/bootctl/loader.conf "$ARCH/boot/loader/"
   echo "timeout 4" >> "$ARCH/boot/loader/loader.conf"
   echo -e "title Arch Linux\nlinux /vmlinuz-linux\ninitrd /intel-ucode.img\ninitrd /initramfs-linux.img" > "$ARCH/boot/loader/entries/arch.conf"
-  echo -e "options cryptdevice=UUID=$(blkid -s UUID -o value "$root_partition"):cryptroot resume=/dev/mapper/cryptroot root=/dev/mapper/cryptroot rw quiet" > "$ARCH/boot/loader/entries/arch.conf"
+  echo -e "options cryptdevice=UUID=$(blkid -s UUID -o value "$root_partition"):cryptroot resume=/dev/mapper/cryptroot root=/dev/mapper/cryptroot rw quiet" >> "$ARCH/boot/loader/entries/arch.conf"
 fi
 
 .env set BOOTLOADER_COMPLETE=true
