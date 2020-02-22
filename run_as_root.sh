@@ -24,123 +24,16 @@ systemctl enable lightdm
 
 # TODO: Install graphics drivers
 
-# Install i3
-echo "Installing packages"
-pacman -Sy --needed --noconfirm --quiet \
-  base-devel \
-  dmenu \
-  feh \
-  fwupd \
-  i3-wm \
-  i3status \
-  libnotify \
-  light \
-  man \
-  mlocate \
-  network-manager-applet \
-  pasystray \
-  pbzip2 \
-  pigz \
-  python \
-  openssh \
-  rsync \
-  terminator \
-  tree \
-  ttf-dejavu \
-  udiskie \
-  unzip \
-  vim \
-  wget \
-  xz \
-  zsh \
-  zstd
-
-
-#################
-# Core Packages #
-#################
-
-echo "Installing packages"
-pacman -Su --needed --noconfirm --quiet \
-  ack \
-  arandr \
-  base-devel \
-  bluez \
-  bluez-utils \
-  blueman \
-  chromium \
-  curl \
-  dmenu \
-  docker \
-  docker-compose \
-  feh \
-  fwupd \
-  git \
-  go \
-  i3-wm \
-  i3lock \
-  i3status \
-  git-crypt \
-  jq \
-  kubectl \
-  kubectx \
-  libnotify \
-  light \
-  man \
-  mesa \
-  mlocate \
-  networkmanager \
-  network-manager-applet \
-  notification-daemon \
-  pasystray \
-  pbzip2 \
-  pulseaudio \
-  pulseaudio-bluetooth \
-  pigz \
-  python \
-  python-toml \
-  openssh \
-  rsync \
-  stow \
-  terminator \
-  tree \
-  ttf-dejavu \
-  udiskie \
-  unzip \
-  vault \
-  vim \
-  virtualbox \
-  virtualbox-host-modules-arch \
-  wget \
-  xz \
-  yamllint \
-  yubico-pam \
-  zsh \
-  zstd
-
-systemctl enable bluetooth --now
-systemctl enable sshd --now
-systemctl enable NetworkManager --now
-systemctl enable docker --now
-
-if ! id -nG $USERNAME | grep -qw docker; then
-  usermod -G docker -a $USERNAME
-fi
-
 ################
 # AUR Packages #
 ################
 
 require_aur breeze-adapta-cursor-theme-git
-require_aur google-cloud-sdk
 require_aur i3lock-fancy-git
 require_aur insync
-require_aur python-pre-commit
 require_aur snapd
-require_aur terraform-docs-bin
 require_aur vim-plug
 #require_aur yq-bin
-require_aur zoom
 
 ###########
 # Cursors #

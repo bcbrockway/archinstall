@@ -5,6 +5,7 @@ set -ex
 source common.sh
 
 xorg_pkgs=(
+  chromium
   lxdm
   ttf-dejavu
   xf86-input-libinput

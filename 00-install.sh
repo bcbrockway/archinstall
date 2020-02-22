@@ -5,6 +5,35 @@ set -e
 source common.sh
 .env --file 00-install.env export
 
+extra_pkgs=(
+  ack
+  bluez
+  bluez-utils
+  curl
+  git
+  intel-ucode
+  light
+  man
+  mlocate
+  networkmanager
+  openssh
+  pbzip2
+  pigz
+  pulseaudio
+  pulseaudio-bluetooth
+  python
+  rsync
+  stow
+  sudo
+  tree
+  unzip
+  vim
+  wget
+  xz
+  zsh
+  zstd
+)
+
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
   pacman -Sy terminus-font
@@ -114,7 +143,7 @@ fi
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
   echo "Installing Arch Linux"
-  pacstrap "$ARCH" base base-devel linux linux-firmware networkmanager git vim intel-ucode sudo
+  pacstrap "$ARCH" base base-devel linux linux-firmware "${extra_pkgs[@]}"
 fi
 
 .env set PACSTRAP_COMPLETE=true
@@ -197,8 +226,6 @@ fi
 
 .env set BOOTLOADER_COMPLETE=true
 
-arch-chroot "$ARCH" systemctl enable NetworkManager
-
 # Users and groups
 if [[ "$USER_SETUP_COMPLETE" != true ]]; then
   echo "Setting up $USERNAME"
@@ -209,5 +236,13 @@ fi
 
 .env set USER_SETUP_COMPLETE=true
 
+arch-chroot "$ARCH" systemctl enable NetworkManager
+arch-chroot "$ARCH" systemctl enable bluetooth
+arch-chroot "$ARCH" systemctl enable sshd
+arch-chroot "$ARCH" systemctl enable NetworkManager
+
 # Xorg
 ./xorg.sh
+
+# i3
+./i3.sh
