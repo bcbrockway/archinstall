@@ -1,14 +1,9 @@
 #!/bin/bash
 
-export FULL_NAME="Bobby Brockway"
-export EMAIL_ADDRESS="bobby.brockway@gmail.com"
-export USERNAME="bbrockway"
-export TERMINAL_FONT=""
-export KEYMAP="uk"
-export VIDEO="vmware"
-export TIMEZONE="Europe/London"
-export LOCALE="en_GB.UTF-8"
-export HOSTNAME="arch-vm"
+source dotenv
+
+.env --file settings.env export
+export ARCH="/mnt"
 
 function yays {
   local packages; packages=("$@")
@@ -89,5 +84,3 @@ function panic {
   echo "$@"
   exit 1
 }
-
-export ARCH="/mnt"
