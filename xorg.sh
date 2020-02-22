@@ -6,6 +6,7 @@ source common.sh
 
 xorg_pkgs=(
   lxdm
+  ttf-dejavu
   xf86-input-libinput
   xorg-server
   xorg-xrandr
