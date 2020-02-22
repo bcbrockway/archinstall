@@ -27,7 +27,7 @@ gdisk "/dev/$HDD"
 cat /proc/partitions
 echo "Which is your root partition? (e.g. sda2): "
 read -r ROOT_PARTITION
-if [[ -d "/dev/$ROOT_PARTITION" ]]; then
+if [[ -e "/dev/$ROOT_PARTITION" ]]; then
   ROOT_PARTITION="/dev/$ROOT_PARTITION"
 else
   panic "/dev/$ROOT_PARTITION doesn't exist"
@@ -35,7 +35,7 @@ fi
 
 echo "Which is your boot partition? (e.g. sda1): "
 read -r BOOT_PARTITION
-if [[ -d "/dev/$BOOT_PARTITION" ]]; then
+if [[ -e "/dev/$BOOT_PARTITION" ]]; then
   BOOT_PARTITION="/dev/$BOOT_PARTITION"
 else
   panic "/dev/$BOOT_PARTITION doesn't exist"
