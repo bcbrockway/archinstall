@@ -103,7 +103,7 @@ if [[ "$MOUNTING_COMPLETE" != true ]]; then
   if [[ "$encrypted" == true ]]; then
     mount /dev/mapper/cryptroot "$ARCH"
   else
-    mount "$root_partition"
+    mount "$root_partition" "$ARCH"
   fi
   mkdir "$ARCH/boot"
   mount "$boot_partition" "$ARCH/boot"
