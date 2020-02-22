@@ -33,5 +33,5 @@ if [[ "$VIDEO" == vmware ]]; then
 fi
 
 # Configure xorg
-copy etc/X11/xorg.conf.d/00-keyboard.conf
-copy etc/X11/xorg.conf.d/30-touchpad.conf
+copy etc/X11/xorg.conf.d/00-keyboard.conf "$ARCH/etc/X11/xorg.conf.d/00-keyboard.conf"
+copy etc/X11/xorg.conf.d/30-touchpad.conf "$ARCH/etc/X11/xorg.conf.d/30-touchpad.conf"
