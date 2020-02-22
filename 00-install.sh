@@ -91,7 +91,7 @@ if [[ "$FORMATTING_COMPLETE" != true ]]; then
   echo "Format boot partition? [y/N]: "
   read -r format_boot
   if [[ "$format_boot" =~ [Yy] ]]; then
-    mkfs.fat "$boot_partition"
+    mkfs.vfat -F32 "$boot_partition"
   fi
 fi
 
