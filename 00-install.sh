@@ -30,7 +30,7 @@ timedatectl set-ntp true
 if [[ "$PARTITIONING_COMPLETE" != true ]]; then
   echo "Would you like to partition the disks? [Y/n]: "
   read -r partition_disks
-  if [[ "$partition_disks" =~ [Yy] ]]; then
+  if [[ ! "$partition_disks" =~ [Nn] ]]; then
     cat /proc/partitions
     echo "Which drive would you like to partition?"
     read -r partition_hdd
