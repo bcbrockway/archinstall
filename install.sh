@@ -2,37 +2,11 @@
 
 set -e
 
-source common.sh
-.env --file 00-install.env export
+# shellcheck source=scripts/common.sh
+source "$ROOT/scripts/common.sh"
+.env --file install.env export
 
-extra_pkgs=(
-  ack
-  bluez
-  bluez-utils
-  curl
-  git
-  intel-ucode
-  light
-  man
-  mlocate
-  networkmanager
-  openssh
-  pbzip2
-  pigz
-  pulseaudio
-  pulseaudio-bluetooth
-  python
-  rsync
-  stow
-  sudo
-  tree
-  unzip
-  vim
-  wget
-  xz
-  zsh
-  zstd
-)
+readarray -t CORE_PKGS < "$ROOT/pkgs/core.txt" && export CORE_PKGS
 
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
@@ -143,7 +117,7 @@ fi
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
   echo "Installing Arch Linux"
-  pacstrap "$ARCH" base base-devel linux linux-firmware "${extra_pkgs[@]}"
+  pacstrap "$ARCH" base base-devel linux linux-firmware "${CORE_PKGS[@]}"
 fi
 
 .env set PACSTRAP_COMPLETE=true
@@ -242,10 +216,17 @@ copy etc/udev/rules.d/backlight.rules "$ARCH/etc/udev/rules.d/backlight.rules"
 arch-chroot "$ARCH" systemctl enable NetworkManager
 arch-chroot "$ARCH" systemctl enable bluetooth
 arch-chroot "$ARCH" systemctl enable sshd
-arch-chroot "$ARCH" systemctl enable NetworkManager
 
 # Xorg
-./xorg.sh
+if [[ "$XORG_SETUP_COMPLETE" != true ]]; then
+  "$ROOT/modules/xorg.sh"
+fi
+
+.env set XORG_SETUP_COMPLETE=true
 
 # i3
-./i3.sh
+if [[ "$I3_SETUP_COMPLETE" != true ]]; then
+  "$ROOT/modules/i3.sh"
+fi
+
+.env set I3_SETUP_COMPLETE=true

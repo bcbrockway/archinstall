@@ -1,7 +1,3 @@
-# Configure backlight
-echo "Configuring backlight"
-copy etc/udev/rules.d/backlight.rules
-
 # Install yay
 if ! pacman -Qi yay > /dev/null; then
   echo "Installing yay"

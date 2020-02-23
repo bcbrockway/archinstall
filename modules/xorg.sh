@@ -1,34 +1,22 @@
 #!/bin/bash
 
-set -ex
-
-source common.sh
-
-xorg_pkgs=(
-  chromium
-  lxdm
-  ttf-dejavu
-  xf86-input-libinput
-  xorg-server
-  xorg-xrandr
-  xorg-xrdb
-)
+readarray -t XORG_PKGS < "$ROOT/pkgs/xorg.txt" && export XORG_PKGS
 
 case "$VIDEO" in
   nvidia)
-    xorg_pkgs+=(nvidia)
+    XORG_PKGS+=(nvidia)
     ;;
   intel)
-    xorg_pkgs+=(xf86-video-intel)
+    XORG_PKGS+=(xf86-video-intel)
     ;;
   vmware)
-    xorg_pkgs+=(virtualbox-guest-utils xf86-video-vmware virtualbox-guest-modules-arch)
+    XORG_PKGS+=(virtualbox-guest-utils xf86-video-vmware virtualbox-guest-modules-arch)
     ;;
   *)
     panic "Only nvidia, intel and vmware supported"
 esac
 
-arch-chroot "$ARCH" pacman -S --needed --noconfirm "${xorg_pkgs[@]}"
+arch-chroot "$ARCH" pacman -S --needed --noconfirm "${XORG_PKGS[@]}"
 
 if [[ "$VIDEO" == vmware ]]; then
   arch-chroot "$ARCH" systemctl enable vboxservice

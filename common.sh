@@ -4,6 +4,7 @@ source dotenv
 
 .env --file settings.env export
 export ARCH="/mnt"
+export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 function yays {
   local packages; packages=("$@")
@@ -11,7 +12,7 @@ function yays {
   for package in "${packages[@]}"; do
     if ! yay -Qi "$package" > /dev/null 2>&1; then
       echo "Installing package: $package"
-      sudo yay -S -a --answerdiff N --answerclean A --needed --noconfirm --quiet "$package"
+      yay -S -a --answerdiff N --answerclean A --needed --noconfirm --quiet "$package"
     else
       echo "Package $package already installed. Skipping..."
     fi
@@ -20,7 +21,7 @@ function yays {
 
 function pacmans {
   local packages; packages=("$@")
-  sudo pacman -S --needed --noconfirm "${packages[@]}"
+  pacman -S --needed --noconfirm "${packages[@]}"
 }
 
 function key_value {
