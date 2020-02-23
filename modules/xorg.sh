@@ -26,6 +26,3 @@ fi
 # Configure xorg
 cp etc/X11/xorg.conf.d/00-keyboard.conf "$ARCH/etc/X11/xorg.conf.d/00-keyboard.conf"
 cp etc/X11/xorg.conf.d/30-touchpad.conf "$ARCH/etc/X11/xorg.conf.d/30-touchpad.conf"
-
-# Configure lxdm
-arch-chroot "$ARCH" systemctl enable lxdm

@@ -45,7 +45,7 @@ if [[ "$PARTITIONING_COMPLETE" != true ]]; then
   read -r boot_partition
   if [[ -e "/dev/$boot_partition" ]]; then
     boot_partition="/dev/$boot_partition"
-    .env set boot_partition="/dev/$boot_partition"
+    .env set boot_partition="$boot_partition"
   else
     panic "/dev/$boot_partition doesn't exist"
   fi
@@ -54,13 +54,12 @@ if [[ "$PARTITIONING_COMPLETE" != true ]]; then
   read -r root_partition
   if [[ -e "/dev/$root_partition" ]]; then
     root_partition="/dev/$root_partition"
+    .env set root_partition="$root_partition"
   else
     panic "/dev/$root_partition doesn't exist"
   fi
 fi
 
-.env set boot_partition="$boot_partition"
-.env set root_partition="$root_partition"
 .env set PARTITIONING_COMPLETE=true
 
 ## Encrypt the root partition

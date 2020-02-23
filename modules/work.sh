@@ -4,25 +4,14 @@ set -e
 
 source common.sh
 
-work_pkgs=(
-  docker
-  docker-compose
-  git-crypt
-  go
-  jq
-  kubectl
-  kubectx
-  python-toml
-  vault
-  virtualbox
-  yamllint
-  yubico-pam
-)
+readarray -t WORK_PKGS < "$ROOT/pkgs/i3.txt" && export WORK_PKGS
 
-require_aur google-cloud-sdk
-require_aur python-pre-commit
-require_aur terraform-docs-bin
-require_aur zoom
+sudo pacman -S --needed --noconfirm "${WORK_PKGS[@]}"
+yays \
+  google-cloud-sdk \
+  python-pre-commit \
+  terraform-docs-bin \
+  zoom
 
 arch-chroot "$ARCH" systemctl enable docker --now
 if ! id -nG "$USERNAME" | grep -qw docker; then

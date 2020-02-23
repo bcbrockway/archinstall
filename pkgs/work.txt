@@ -1,0 +1,12 @@
+docker
+docker-compose
+git-crypt
+go
+jq
+kubectl
+kubectx
+python-toml
+vault
+virtualbox
+yamllint
+yubico-pam
