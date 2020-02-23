@@ -5,10 +5,6 @@ set -ex
 source common.sh
 .env --file 10-next-steps.env export
 
-# Configure backlight
-echo "Configuring backlight"
-copy etc/udev/rules.d/backlight.rules
-
 # Install pikuar
 git clone https://aur.archlinux.org/pikaur.git
 cd pikaur
