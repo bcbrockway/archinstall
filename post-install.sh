@@ -52,7 +52,7 @@ fi
 
 # Snapd
 if ! systemctl is-active --quiet snapd.socket; then
-  systemctl enable --now snapd.socket
+  sudo systemctl enable --now snapd.socket
 fi
 if [[ ! -h /snap ]]; then
   sudo ln -s /var/lib/snapd/snap /snap
