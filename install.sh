@@ -2,11 +2,7 @@
 
 set -e
 
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-export ROOT
-
-# shellcheck source=scripts/common.sh
-source "$ROOT/scripts/common.sh"
+source common.sh
 .env --file install.env export
 
 readarray -t CORE_PKGS < "$ROOT/pkgs/core.txt" && export CORE_PKGS
