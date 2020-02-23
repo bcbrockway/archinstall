@@ -1,8 +1,8 @@
 #!/bin/bash
 
-source dotenv
-
+source scripts/dotenv
 .env --file settings.env export
+
 ARCH="/mnt"
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export ARCH ROOT
