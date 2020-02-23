@@ -13,5 +13,5 @@ makepkg -fsri
 # Install lightdm
 pacman -S --needed --noconfirm --quiet lightdm
 require_aur lightdm-slick-greeter
-copy etc/lightdm/lightdm.conf
+cp etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
 systemctl enable lightdm

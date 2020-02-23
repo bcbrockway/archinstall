@@ -210,7 +210,7 @@ fi
 .env set USER_SETUP_COMPLETE=true
 
 # Configure backlight
-copy etc/udev/rules.d/backlight.rules "$ARCH/etc/udev/rules.d/backlight.rules"
+cp etc/udev/rules.d/backlight.rules "$ARCH/etc/udev/rules.d/backlight.rules"
 
 arch-chroot "$ARCH" systemctl enable NetworkManager
 arch-chroot "$ARCH" systemctl enable bluetooth

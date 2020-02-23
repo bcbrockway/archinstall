@@ -1,41 +1,8 @@
-# Install yay
-if ! pacman -Qi yay > /dev/null; then
-  echo "Installing yay"
-  yaydir=$(mktemp -u)
-  git clone https://aur.archlinux.org/yay.git "$yaydir"
-  chmod 777 "$yaydir"
-  pushd "$yaydir"
-  sudo -u "$USERNAME" makepkg -si --noconfirm
-  popd
-fi
-
-# Add multithreading support to makepkg
-copy etc/makepkg.conf
-
 # Install lightdm
 pacman -S --needed --noconfirm --quiet lightdm
 require_aur lightdm-slick-greeter
-copy etc/lightdm/lightdm.conf
+cp etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
 systemctl enable lightdm
-
-# TODO: Install graphics drivers
-
-################
-# AUR Packages #
-################
-
-require_aur breeze-adapta-cursor-theme-git
-require_aur i3lock-fancy-git
-require_aur insync
-require_aur snapd
-require_aur vim-plug
-#require_aur yq-bin
-
-###########
-# Cursors #
-###########
-echo "Checking cursor config"
-copy usr/share/icons/default/index.theme
 
 #######
 # Git #
