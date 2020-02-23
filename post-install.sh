@@ -55,7 +55,7 @@ if ! systemctl is-active --quiet snapd.socket; then
   systemctl enable --now snapd.socket
 fi
 if [[ ! -h /snap ]]; then
-  ln -s /var/lib/snapd/snap /snap
+  sudo ln -s /var/lib/snapd/snap /snap
 fi
 
 echo "Install work packages? [Y/n]: "
