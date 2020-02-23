@@ -4,9 +4,23 @@ set -e
 
 source common.sh
 
-readarray -t WORK_PKGS < "$ROOT/pkgs/i3.txt" && export WORK_PKGS
+export WORK_PKGS=(
+  docker
+  docker-compose
+  git-crypt
+  go
+  jq
+  kubectl
+  kubectx
+  python-toml
+  vault
+  virtualbox
+  yamllint
+  yubico-pam
+)
 
 sudo pacman -S --needed --noconfirm "${WORK_PKGS[@]}"
+
 yays \
   google-cloud-sdk \
   python-pre-commit \

@@ -9,11 +9,10 @@ source common.sh
 sudo cp etc/makepkg.conf /etc/makepkg.conf
 
 # Install yay
-if ! pacman -Qi yay > /dev/null; then
+if ! command yay > /dev/null 2>&1; then
   echo "Installing yay"
   yaydir=$(mktemp -u)
   git clone https://aur.archlinux.org/yay.git "$yaydir"
-  chmod 777 "$yaydir"
   pushd "$yaydir"
   makepkg -si --noconfirm
   popd
@@ -25,7 +24,8 @@ yays \
   insync \
   lightdm-slick-greeter \
   snapd \
-  vim-plug
+  vim-plug \
+  yadm
 
 #yays yq-bin
 
@@ -56,18 +56,23 @@ if ! systemctl is-active --quiet snapd.socket; then
 fi
 if [[ ! -h /snap ]]; then
   ln -s /var/lib/snapd/snap /snap
-  echo "Snap needs to reboot your system. Ok? [y/n]: "
-  read -n1 ans
-  if [[ $ans =~ [Yy] ]]; then
-    reboot
-  else
-    touch /tmp/REBOOT_REQUIRED
-  fi
-fi
-if [[ ! -f /tmp/REBOOT_REQUIRED ]]; then
-  snap_install goland --classic
-  snap_install pycharm-community --classic
 fi
 
 echo "Install work packages? [Y/n]: "
 read -r install_work
+if [[ "$install_work" =~ [Yy] ]]; then
+  "$ROOT/modules/work.sh"
+fi
+
+echo "Update dotfiles? [Y/n]: "
+read -r update_dotfiles
+if [[ "$update_dotfiles" =~ [Yy] ]]; then
+  yadm clone https://github.com/bcbrockway/dotfiles.git
+  yadm reset --hard origin/master
+fi
+
+echo "Reboot? [Yn]: "
+read -r reboot
+if [[ "$reboot" =~ [Yy] ]]; then
+  reboot
+fi

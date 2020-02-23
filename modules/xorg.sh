@@ -1,6 +1,14 @@
 #!/bin/bash
 
-readarray -t XORG_PKGS < "$ROOT/pkgs/xorg.txt" && export XORG_PKGS
+export XORG_PKGS=(
+  chromium
+  lightdm
+  ttf-dejavu
+  xf86-input-libinput
+  xorg-server
+  xorg-xrandr
+  xorg-xrdb
+)
 
 case "$VIDEO" in
   nvidia)

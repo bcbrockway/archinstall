@@ -5,7 +5,34 @@ set -e
 source common.sh
 .env --file install.env export
 
-readarray -t CORE_PKGS < "$ROOT/pkgs/core.txt" && export CORE_PKGS
+export CORE_PKGS=(
+  ack
+  bluez
+  bluez-utils
+  curl
+  git
+  intel-ucode
+  light
+  man
+  mlocate
+  networkmanager
+  openssh
+  pbzip2
+  pigz
+  pulseaudio
+  pulseaudio-bluetooth
+  python
+  rsync
+  stow
+  sudo
+  tree
+  unzip
+  vim
+  wget
+  xz
+  zsh
+  zstd
+)
 
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
@@ -231,7 +258,8 @@ fi
 
 # Copy this dir into Arch file system
 mkdir -p "$ARCH/data/bcbrockway"
-cd ../ && cp archinstall "$ARCH/data/bcbrockway/"
+chmod 777 "$ARCH/data/bcbrockway"
+cd ../ && cp -r archinstall "$ARCH/data/bcbrockway/"
 
 echo "Arch Linux installed. Reboot? [Yn]: "
 read -r reboot
