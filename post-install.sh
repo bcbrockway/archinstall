@@ -46,7 +46,7 @@ if [[ ! -d ~/.oh-my-zsh ]]; then
   echo "Setting up Oh My Zsh"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
-if [[ $SHELL != /bin/zsh ]]; then
+if [[ ! $SHELL =~ .*/zsh ]]; then
   chsh -s /bin/zsh
 fi
 
