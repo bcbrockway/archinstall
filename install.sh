@@ -115,7 +115,7 @@ fi
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
   echo "Installing Arch Linux"
-  pacstrap "$ARCH" base base-devel linux linux-firmware "${CORE_PKGS[@]}"
+  pacstrap "$ARCH" --needed base base-devel linux linux-firmware "${CORE_PKGS[@]}"
 fi
 
 .env set PACSTRAP_COMPLETE=true
@@ -228,3 +228,13 @@ if [[ "$I3_SETUP_COMPLETE" != true ]]; then
 fi
 
 .env set I3_SETUP_COMPLETE=true
+
+# Copy this dir into Arch file system
+mkdir -p "$ARCH/data/bcbrockway"
+cd ../ && cp archinstall "$ARCH/data/bcbrockway/"
+
+echo "Arch Linux installed. Reboot? [Yn]: "
+read -r reboot
+if [[ "$reboot" =~ [Yy] ]]; then
+  reboot
+fi
