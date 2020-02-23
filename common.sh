@@ -4,7 +4,6 @@ source dotenv
 
 .env --file settings.env export
 export ARCH="/mnt"
-export ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 function yays {
   local packages; packages=("$@")
