@@ -23,6 +23,7 @@ yays \
   i3lock-fancy-git \
   insync \
   lightdm-slick-greeter \
+  rxvt-unicode-wcwidthcallback \
   snapd \
   vim-plug \
   yadm
