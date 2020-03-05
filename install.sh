@@ -36,9 +36,9 @@ export CORE_PKGS=(
 
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
-  pacman -Sy terminus-font
+  pacman -Sy --needed --noconfirm terminus-font
+  COREPKGS+=(terminus-font)
   setfont ter-v32n
-  key_value FONT "ter-v32n" "$ARCH/etc/vconsole.conf"
 fi
 
 ## Set the keyboard layout
@@ -173,6 +173,7 @@ if [[ "$LOCALE_COMPLETE" != true ]]; then
   arch-chroot "$ARCH" locale-gen
   key_value LANG "$LOCALE" "$ARCH/etc/locale.conf"
   key_value KEYMAP "$KEYMAP" "$ARCH/etc/vconsole.conf"
+  key_value FONT "ter-v32n" "$ARCH/etc/vconsole.conf"
 fi
 
 .env set LOCALE_COMPLETE=true
