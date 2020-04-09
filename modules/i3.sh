@@ -9,6 +9,7 @@ export I3_PKGS=(
   feh
   network-manager-applet
   pasystray
+  perl-anyevent-i3
   rxvt-unicode
   udiskie
 )
