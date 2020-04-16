@@ -267,7 +267,7 @@ fi
 # Copy this dir into Arch file system
 mkdir -p "$ARCH/data/bcbrockway"
 cd ../ && cp -r archinstall "$ARCH/data/bcbrockway/"
-chown -R bbrockway: "$ARCH/data/bcbrockway"
+arch-chroot "$ARCH" chown -R bbrockway: /data/bcbrockway
 
 echo "Arch Linux installed. Reboot? [Yn]: "
 read -r reboot
