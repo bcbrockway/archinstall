@@ -11,6 +11,7 @@ export CORE_PKGS=(
   bluez-utils
   curl
   git
+  go
   intel-ucode
   light
   man
