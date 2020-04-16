@@ -1,8 +1,9 @@
 #!/bin/bash
 
 export XORG_PKGS=(
-  chromium
   lightdm
+  noto-fonts
+  noto-fonts-emoji
   ttf-dejavu
   xf86-input-libinput
   xorg-server

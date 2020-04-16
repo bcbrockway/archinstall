@@ -21,6 +21,9 @@ cd archinstall
 ### Check values in settings.env
 vim settings.env
 
-### Run install script
-./install.sh
+### Run root setup script
+./setup-root.sh
+
+### Reboot, login as user and run user setup script
+./setup-user.sh
 ```
