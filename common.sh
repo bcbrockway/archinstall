@@ -20,11 +20,6 @@ function yays {
   done
 }
 
-function pacmans {
-  local packages; packages=("$@")
-  pacman -S --needed --noconfirm "${packages[@]}"
-}
-
 function key_value {
   local key; key=$1
   local value; value=$2

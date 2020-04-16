@@ -36,7 +36,7 @@ export CORE_PKGS=(
 
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
-  pacmans terminus-font
+  pacman -Syu --needed --noconfirm terminus-font
   COREPKGS+=(terminus-font)
   setfont ter-v32n
 fi

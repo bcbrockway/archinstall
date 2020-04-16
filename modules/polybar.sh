@@ -14,4 +14,4 @@ export POLYBAR_PKGS=(
   udiskie
 )
 
-arch-chroot "$ARCH" pacmans "${I3_PKGS[@]}"
+arch-chroot "$ARCH" pacman -Syu --needed --noconfirm "${I3_PKGS[@]}"

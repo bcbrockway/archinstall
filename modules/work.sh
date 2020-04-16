@@ -19,7 +19,7 @@ export WORK_PKGS=(
   yubico-pam
 )
 
-sudo pacmans "${WORK_PKGS[@]}"
+sudo pacman -Syu --needed --noconfirm "${WORK_PKGS[@]}"
 
 yays \
   google-cloud-sdk \

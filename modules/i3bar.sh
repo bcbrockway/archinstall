@@ -8,4 +8,4 @@ export I3BAR_PKGS=(
   udiskie
 )
 
-arch-chroot "$ARCH" pacmans "${I3BAR_PKGS[@]}"
+arch-chroot "$ARCH" pacman -Syu --needed --noconfirm "${I3BAR_PKGS[@]}"
