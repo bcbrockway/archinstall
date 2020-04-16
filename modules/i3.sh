@@ -14,4 +14,4 @@ export I3_PKGS=(
   udiskie
 )
 
-arch-chroot "$ARCH" pacman -S --needed --noconfirm "${I3_PKGS[@]}"
+arch-chroot "$ARCH" pacmans "${I3_PKGS[@]}"

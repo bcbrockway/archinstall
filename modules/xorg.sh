@@ -24,7 +24,7 @@ case "$VIDEO" in
     panic "Only nvidia, intel and vmware supported"
 esac
 
-arch-chroot "$ARCH" pacman -S --needed --noconfirm "${XORG_PKGS[@]}"
+arch-chroot "$ARCH" pacmans "${XORG_PKGS[@]}"
 
 if [[ "$VIDEO" == vmware ]]; then
   arch-chroot "$ARCH" systemctl enable vboxservice

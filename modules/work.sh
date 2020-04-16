@@ -19,7 +19,7 @@ export WORK_PKGS=(
   yubico-pam
 )
 
-sudo pacman -S --needed --noconfirm "${WORK_PKGS[@]}"
+sudo pacmans "${WORK_PKGS[@]}"
 
 yays \
   google-cloud-sdk \
@@ -27,7 +27,7 @@ yays \
   terraform-docs-bin \
   zoom
 
-arch-chroot "$ARCH" systemctl enable docker --now
+sudo systemctl enable docker
 if ! id -nG "$USERNAME" | grep -qw docker; then
-  usermod -G docker -a "$USERNAME"
+  sudo usermod -G docker -a "$USERNAME"
 fi
