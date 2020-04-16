@@ -18,7 +18,7 @@ case "$VIDEO" in
     XORG_PKGS+=(xf86-video-intel)
     ;;
   vmware)
-    XORG_PKGS+=(virtualbox-guest-utils xf86-video-vmware virtualbox-guest-modules-arch)
+    XORG_PKGS+=(virtualbox-guest-utils xf86-video-vmware)
     ;;
   *)
     panic "Only nvidia, intel and vmware supported"
@@ -32,5 +32,6 @@ if [[ "$VIDEO" == vmware ]]; then
 fi
 
 # Configure xorg
+mkdir -p "$ARCH/etc/X11/xorg.conf.d"
 cp etc/X11/xorg.conf.d/00-keyboard.conf "$ARCH/etc/X11/xorg.conf.d/00-keyboard.conf"
 cp etc/X11/xorg.conf.d/30-touchpad.conf "$ARCH/etc/X11/xorg.conf.d/30-touchpad.conf"

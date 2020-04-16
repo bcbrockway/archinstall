@@ -22,5 +22,5 @@ cd archinstall
 vim settings.env
 
 ### Run install script
-./00-install.sh
+./install.sh
 ```
