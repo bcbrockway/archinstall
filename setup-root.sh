@@ -142,8 +142,14 @@ fi
 
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
-  echo "Installing Arch Linux"
-  pacstrap "$ARCH" --needed base base-devel linux linux-firmware "${CORE_PKGS[@]}"
+  echo "Proceed with pacstrap? [y/N]: "
+  read -r pacstrap_confirm
+  if [[ "$pacstrap_confirm" =~ [Yy] ]]; then
+    echo "Installing Arch Linux"
+    pacstrap "$ARCH" --needed base base-devel linux linux-firmware "${CORE_PKGS[@]}"
+  else
+    exit 0
+  fi
 fi
 
 .env set PACSTRAP_COMPLETE=true
