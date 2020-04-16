@@ -8,18 +8,10 @@ source common.sh
 export MY_PKGS=(
   chromium
   firefox
+  insync
 )
 
-yays \
-  breeze-adapta-cursor-theme-git \
-  i3lock-fancy-git \
-  insync \
-  rxvt-unicode-wcwidthcallback \
-  vim-plug \
-  yadm
-
-# Cursors
-sudo cp usr/share/icons/default/index.theme /usr/share/icons/default/index.theme
+yays "${MY_PKGS[@]}"
 
 # Oh My Zsh
 if [[ ! -d ~/.oh-my-zsh ]]; then

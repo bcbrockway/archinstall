@@ -13,7 +13,7 @@ function yays {
   for package in "${packages[@]}"; do
     if ! yay -Qi "$package" > /dev/null 2>&1; then
       echo "Installing package: $package"
-      yay -S -a --answerdiff N --answerclean A --needed --noconfirm --quiet "$package"
+      yay -S --answerdiff N --answerclean A --needed --noconfirm --quiet "$package"
     else
       echo "Package $package already installed. Skipping..."
     fi

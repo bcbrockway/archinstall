@@ -19,8 +19,16 @@ if ! command yay > /dev/null 2>&1; then
 fi
 
 yays \
+  breeze-adapta-cursor-theme-git \
+  i3lock-fancy-git \
   lightdm-slick-greeter \
-  snapd
+  rxvt-unicode-wcwidthcallback \
+  snapd \
+  vim-plug \
+  yadm
+
+# Cursors
+sudo cp usr/share/icons/default/index.theme /usr/share/icons/default/index.theme
 
 # LightDM Slick Greeter
 sudo cp etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
