@@ -25,6 +25,7 @@ yays \
   lightdm-slick-greeter \
   rxvt-unicode-wcwidthcallback \
   snapd \
+  urxvt-perls \
   vim-plug \
   yadm
 

@@ -2,7 +2,6 @@
 
 export I3BAR_PKGS=(
   blueman
-  i3status
   network-manager-applet
   pasystray
   udiskie

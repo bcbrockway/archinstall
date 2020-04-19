@@ -2,9 +2,10 @@
 
 export I3_PKGS=(
   arandr
-  i3-gaps
   dmenu
   feh
+  i3-gaps
+  i3status
   perl-anyevent-i3
 )
 
