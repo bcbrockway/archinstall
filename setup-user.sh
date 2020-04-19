@@ -9,7 +9,7 @@ source common.sh
 sudo cp etc/makepkg.conf /etc/makepkg.conf
 
 # Install yay
-if ! command yay > /dev/null 2>&1; then
+if ! command -v yay > /dev/null 2>&1; then
   echo "Installing yay"
   yaydir=$(mktemp -u)
   git clone https://aur.archlinux.org/yay.git "$yaydir"
@@ -53,12 +53,14 @@ if [[ ! -d ~/.oh-my-zsh ]]; then
   echo "Setting up Oh My Zsh"
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
-if [[ ! $SHELL =~ .*/zsh ]]; then
-  chsh -s /bin/zsh
+
+echo "Update dotfiles? [Y/n]: "
+read -r update_dotfiles
+if [[ ! "$update_dotfiles" =~ [Nn] ]]; then
+  yadm clone https://github.com/bcbrockway/dotfiles.git
+  yadm reset --hard origin/master
 fi
 
-echo "Reboot? [Y/n]: "
-read -r reboot
-if [[ ! "$reboot" =~ [Nn] ]]; then
-  reboot
+if [[ ! $SHELL =~ .*/zsh ]]; then
+  chsh -s /bin/zsh
 fi
