@@ -20,6 +20,7 @@ fi
 
 yays \
   breeze-adapta-cursor-theme-git \
+  firefox \
   i3lock-fancy-git \
   lightdm-slick-greeter \
   rxvt-unicode-wcwidthcallback \
@@ -45,6 +46,15 @@ if ! systemctl is-active --quiet snapd.socket; then
 fi
 if [[ ! -h /snap ]]; then
   sudo ln -s /var/lib/snapd/snap /snap
+fi
+
+# Oh My Zsh
+if [[ ! -d ~/.oh-my-zsh ]]; then
+  echo "Setting up Oh My Zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+if [[ ! $SHELL =~ .*/zsh ]]; then
+  chsh -s /bin/zsh
 fi
 
 echo "Reboot? [Y/n]: "

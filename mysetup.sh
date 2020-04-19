@@ -6,21 +6,10 @@ source common.sh
 .env --file install.env export
 
 export MY_PKGS=(
-  chromium
-  firefox
   insync
 )
 
 yays "${MY_PKGS[@]}"
-
-# Oh My Zsh
-if [[ ! -d ~/.oh-my-zsh ]]; then
-  echo "Setting up Oh My Zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
-if [[ ! $SHELL =~ .*/zsh ]]; then
-  chsh -s /bin/zsh
-fi
 
 echo "Install work packages? [Y/n]: "
 read -r install_work

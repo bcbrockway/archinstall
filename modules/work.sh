@@ -5,6 +5,7 @@ set -e
 source common.sh
 
 export WORK_PKGS=(
+  chromium
   docker
   docker-compose
   git-crypt
