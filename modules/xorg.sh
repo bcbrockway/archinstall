@@ -5,6 +5,7 @@ export XORG_PKGS=(
   noto-fonts
   noto-fonts-emoji
   ttf-dejavu
+  xdg-utils
   xf86-input-libinput
   xorg-server
   xorg-xrandr
