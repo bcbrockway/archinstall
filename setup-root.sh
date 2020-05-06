@@ -12,6 +12,7 @@ export CORE_PKGS=(
   curl
   git
   go
+  inetutils
   intel-ucode
   light
   man
