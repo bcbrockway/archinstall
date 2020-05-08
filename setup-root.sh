@@ -250,6 +250,7 @@ fi
 cp etc/udev/rules.d/backlight.rules "$ARCH/etc/udev/rules.d/backlight.rules"
 
 arch-chroot "$ARCH" systemctl enable NetworkManager
+arch-chroot "$ARCH" systemctl enable NetworkManager-dispatcher
 arch-chroot "$ARCH" systemctl enable bluetooth
 arch-chroot "$ARCH" systemctl enable sshd
 
