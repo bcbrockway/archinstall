@@ -9,7 +9,7 @@ source common.sh
 sudo cp etc/makepkg.conf /etc/makepkg.conf
 
 # Install yay
-if ! command yay > /dev/null 2>&1; then
+if ! command -v yay > /dev/null 2>&1; then
   echo "Installing yay"
   yaydir=$(mktemp -u)
   git clone https://aur.archlinux.org/yay.git "$yaydir"
@@ -20,15 +20,14 @@ fi
 
 yays \
   breeze-adapta-cursor-theme-git \
+  firefox \
   i3lock-fancy-git \
-  insync \
   lightdm-slick-greeter \
   rxvt-unicode-wcwidthcallback \
   snapd \
+  urxvt-perls \
   vim-plug \
   yadm
-
-#yays yq-bin
 
 # Cursors
 sudo cp usr/share/icons/default/index.theme /usr/share/icons/default/index.theme
@@ -42,15 +41,6 @@ git config --global user.name "$FULL_NAME"
 git config --global user.email "$EMAIL_ADDRESS"
 git config --global core.excludesfile ~/.gitignore-global
 
-# Oh My Zsh
-if [[ ! -d ~/.oh-my-zsh ]]; then
-  echo "Setting up Oh My Zsh"
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-fi
-if [[ ! $SHELL =~ .*/zsh ]]; then
-  chsh -s /bin/zsh
-fi
-
 # Snapd
 if ! systemctl is-active --quiet snapd.socket; then
   sudo systemctl enable --now snapd.socket
@@ -59,10 +49,10 @@ if [[ ! -h /snap ]]; then
   sudo ln -s /var/lib/snapd/snap /snap
 fi
 
-echo "Install work packages? [Y/n]: "
-read -r install_work
-if [[ ! "$install_work" =~ [Nn] ]]; then
-  "$ROOT/modules/work.sh"
+# Oh My Zsh
+if [[ ! -d ~/.oh-my-zsh ]]; then
+  echo "Setting up Oh My Zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
 echo "Update dotfiles? [Y/n]: "
@@ -72,8 +62,6 @@ if [[ ! "$update_dotfiles" =~ [Nn] ]]; then
   yadm reset --hard origin/master
 fi
 
-echo "Reboot? [Y/n]: "
-read -r reboot
-if [[ ! "$reboot" =~ [Nn] ]]; then
-  reboot
+if [[ ! $SHELL =~ .*/zsh ]]; then
+  chsh -s /bin/zsh
 fi

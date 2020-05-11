@@ -11,6 +11,8 @@ export CORE_PKGS=(
   bluez-utils
   curl
   git
+  go
+  inetutils
   intel-ucode
   light
   man
@@ -36,7 +38,7 @@ export CORE_PKGS=(
 
 if [[ "$HIDPI" == true ]]; then
   echo "Setting console font for HiDPI"
-  pacman -Sy --needed --noconfirm terminus-font
+  pacman -Syu --needed --noconfirm terminus-font
   COREPKGS+=(terminus-font)
   setfont ter-v32n
 fi
@@ -141,8 +143,14 @@ fi
 
 ## Install essential packages
 if [[ "$PACSTRAP_COMPLETE" != true ]]; then
-  echo "Installing Arch Linux"
-  pacstrap "$ARCH" --needed base base-devel linux linux-firmware "${CORE_PKGS[@]}"
+  echo "Proceed with pacstrap? [y/N]: "
+  read -r pacstrap_confirm
+  if [[ "$pacstrap_confirm" =~ [Yy] ]]; then
+    echo "Installing Arch Linux"
+    pacstrap "$ARCH" --needed base base-devel linux linux-firmware "${CORE_PKGS[@]}"
+  else
+    exit 0
+  fi
 fi
 
 .env set PACSTRAP_COMPLETE=true
@@ -229,7 +237,9 @@ fi
 # Users and groups
 if [[ "$USER_SETUP_COMPLETE" != true ]]; then
   echo "Setting up $USERNAME"
-  arch-chroot "$ARCH" useradd -G wheel,video -m "$USERNAME"
+  cp etc/pam.d/chsh /etc/pam.d/chsh
+  arch-chroot "$ARCH" groupadd chsh
+  arch-chroot "$ARCH" useradd -G chsh,wheel,video -m "$USERNAME"
   arch-chroot "$ARCH" passwd "$USERNAME"
   sed --in-place 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' "$ARCH/etc/sudoers"
 fi
@@ -240,6 +250,7 @@ fi
 cp etc/udev/rules.d/backlight.rules "$ARCH/etc/udev/rules.d/backlight.rules"
 
 arch-chroot "$ARCH" systemctl enable NetworkManager
+arch-chroot "$ARCH" systemctl enable NetworkManager-dispatcher
 arch-chroot "$ARCH" systemctl enable bluetooth
 arch-chroot "$ARCH" systemctl enable sshd
 
@@ -259,8 +270,8 @@ fi
 
 # Copy this dir into Arch file system
 mkdir -p "$ARCH/data/bcbrockway"
-chmod 777 "$ARCH/data/bcbrockway"
 cd ../ && cp -r archinstall "$ARCH/data/bcbrockway/"
+arch-chroot "$ARCH" chown -R bbrockway: /data/bcbrockway
 
 echo "Arch Linux installed. Reboot? [Yn]: "
 read -r reboot

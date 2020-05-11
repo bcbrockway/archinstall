@@ -1,9 +1,11 @@
 #!/bin/bash
 
 export XORG_PKGS=(
-  chromium
   lightdm
+  noto-fonts
+  noto-fonts-emoji
   ttf-dejavu
+  xdg-utils
   xf86-input-libinput
   xorg-server
   xorg-xrandr
@@ -18,13 +20,13 @@ case "$VIDEO" in
     XORG_PKGS+=(xf86-video-intel)
     ;;
   vmware)
-    XORG_PKGS+=(virtualbox-guest-utils xf86-video-vmware virtualbox-guest-modules-arch)
+    XORG_PKGS+=(virtualbox-guest-utils xf86-video-vmware)
     ;;
   *)
     panic "Only nvidia, intel and vmware supported"
 esac
 
-arch-chroot "$ARCH" pacman -S --needed --noconfirm "${XORG_PKGS[@]}"
+arch-chroot "$ARCH" pacman -Syu --needed --noconfirm "${XORG_PKGS[@]}"
 
 if [[ "$VIDEO" == vmware ]]; then
   arch-chroot "$ARCH" systemctl enable vboxservice
@@ -32,5 +34,6 @@ if [[ "$VIDEO" == vmware ]]; then
 fi
 
 # Configure xorg
+mkdir -p "$ARCH/etc/X11/xorg.conf.d"
 cp etc/X11/xorg.conf.d/00-keyboard.conf "$ARCH/etc/X11/xorg.conf.d/00-keyboard.conf"
 cp etc/X11/xorg.conf.d/30-touchpad.conf "$ARCH/etc/X11/xorg.conf.d/30-touchpad.conf"
