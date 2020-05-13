@@ -11,6 +11,7 @@ export WORK_PKGS=(
   docker-compose
   git-crypt
   go
+  httpie
   jq
   kubectl
   kubectx
