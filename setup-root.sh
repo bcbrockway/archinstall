@@ -6,7 +6,6 @@ source common.sh
 .env --file install.env export
 
 export CORE_PKGS=(
-  ack
   bluez
   bluez-utils
   curl
@@ -32,16 +31,10 @@ export CORE_PKGS=(
   vim
   wget
   xz
+  yubikey-manager
   zsh
   zstd
 )
-
-if [[ "$HIDPI" == true ]]; then
-  echo "Setting console font for HiDPI"
-  pacman -Syu --needed --noconfirm terminus-font
-  COREPKGS+=(terminus-font)
-  setfont ter-v32n
-fi
 
 ## Set the keyboard layout
 echo "Setting keyboard layout"
@@ -203,7 +196,7 @@ fi
 if [[ "$INITRAMFS_COMPLETE" != true ]]; then
   if [[ "$encrypted" == true ]]; then
     echo "Running mkinitcpio"
-    sed -i 's/HOOKS=.*/HOOKS="base udev autodetect keyboard keymap consolefont modconf block encrypt filesystems fsck"/' "$ARCH"/etc/mkinitcpio.conf
+    sed -i 's/HOOKS=.*/HOOKS="base udev autodetect keyboard keymap modconf block encrypt filesystems fsck"/' "$ARCH"/etc/mkinitcpio.conf
     arch-chroot "$ARCH" mkinitcpio -P
   fi
 fi
@@ -253,20 +246,7 @@ arch-chroot "$ARCH" systemctl enable NetworkManager
 arch-chroot "$ARCH" systemctl enable NetworkManager-dispatcher
 arch-chroot "$ARCH" systemctl enable bluetooth
 arch-chroot "$ARCH" systemctl enable sshd
-
-# Xorg
-if [[ "$XORG_SETUP_COMPLETE" != true ]]; then
-  "$ROOT/modules/xorg.sh"
-fi
-
-.env set XORG_SETUP_COMPLETE=true
-
-# i3
-if [[ "$I3_SETUP_COMPLETE" != true ]]; then
-  "$ROOT/modules/i3.sh"
-fi
-
-.env set I3_SETUP_COMPLETE=true
+arch-chroot "$ARCH" systemctl enable pcscd
 
 # Copy this dir into Arch file system
 mkdir -p "$ARCH/data/bcbrockway"

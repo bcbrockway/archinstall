@@ -19,27 +19,15 @@ if ! command -v yay > /dev/null 2>&1; then
 fi
 
 yays \
-  breeze-adapta-cursor-theme-git \
-  firefox \
-  i3lock-fancy-git \
-  lightdm-slick-greeter \
-  rxvt-unicode-wcwidthcallback \
   snapd \
-  urxvt-perls \
   vim-plug \
   yadm
-
-# Cursors
-sudo cp usr/share/icons/default/index.theme /usr/share/icons/default/index.theme
-
-# LightDM Slick Greeter
-sudo cp etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
-sudo systemctl enable lightdm
 
 # Git config
 git config --global user.name "$FULL_NAME"
 git config --global user.email "$EMAIL_ADDRESS"
 git config --global core.excludesfile ~/.gitignore-global
+git config --global pull.rebase false
 
 # Snapd
 if ! systemctl is-active --quiet snapd.socket; then
@@ -61,6 +49,21 @@ if [[ ! "$update_dotfiles" =~ [Nn] ]]; then
   yadm clone https://github.com/bcbrockway/dotfiles.git
   yadm reset --hard origin/master
 fi
+
+# Xorg
+if [[ "$XORG_SETUP_COMPLETE" != true ]]; then
+  "$ROOT/modules/xorg.sh"
+fi
+
+.env set XORG_SETUP_COMPLETE=true
+
+# i3
+if [[ "$I3_SETUP_COMPLETE" != true ]]; then
+  "$ROOT/modules/i3.sh"
+fi
+
+.env set I3_SETUP_COMPLETE=true
+
 
 if [[ ! $SHELL =~ .*/zsh ]]; then
   chsh -s /bin/zsh

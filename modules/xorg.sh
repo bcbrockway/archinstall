@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 export XORG_PKGS=(
   lightdm
   noto-fonts
@@ -8,9 +10,12 @@ export XORG_PKGS=(
   xdg-utils
   xf86-input-libinput
   xorg-server
+  xorg-xinit
   xorg-xrandr
   xorg-xrdb
 )
+
+source common.sh
 
 case "$VIDEO" in
   nvidia)
@@ -26,14 +31,14 @@ case "$VIDEO" in
     panic "Only nvidia, intel and vmware supported"
 esac
 
-arch-chroot "$ARCH" pacman -Syu --needed --noconfirm "${XORG_PKGS[@]}"
+yays "${XORG_PKGS[@]}"
 
 if [[ "$VIDEO" == vmware ]]; then
-  arch-chroot "$ARCH" systemctl enable vboxservice
-  arch-chroot "$ARCH" usermod -G vboxsf -a "$USERNAME"
+  sudo systemctl enable vboxservice
+  sudo usermod -G vboxsf -a "$USERNAME"
 fi
 
 # Configure xorg
-mkdir -p "$ARCH/etc/X11/xorg.conf.d"
-cp etc/X11/xorg.conf.d/00-keyboard.conf "$ARCH/etc/X11/xorg.conf.d/00-keyboard.conf"
-cp etc/X11/xorg.conf.d/30-touchpad.conf "$ARCH/etc/X11/xorg.conf.d/30-touchpad.conf"
+sudo mkdir -p /etc/X11/xorg.conf.d
+sudo cp etc/X11/xorg.conf.d/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
+sudo cp etc/X11/xorg.conf.d/30-touchpad.conf /etc/X11/xorg.conf.d/30-touchpad.conf
