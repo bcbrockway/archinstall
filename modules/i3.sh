@@ -2,6 +2,9 @@
 
 set -e
 
+source common.sh
+.env --file install.env export
+
 export I3_PKGS=(
   adobe-source-han-sans-jp-fonts
   alacritty
@@ -23,10 +26,11 @@ export I3_PKGS=(
   volctl
 )
 
-source common.sh
-
 yays "${I3_PKGS[@]}"
 
 # Cursors
 sudo cp usr/share/icons/default/index.theme /usr/share/icons/default/index.theme
+
+echo "Setting default lightdm session to i3"
+sudo sed -i "s/#*\(autologin-session\)=.*/\1=i3/g" /etc/lightdm/lightdm.conf
 

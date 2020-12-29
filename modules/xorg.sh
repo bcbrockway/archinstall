@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set -ex
+set -e
+
+source common.sh
+.env --file install.env export
 
 export XORG_PKGS=(
   lightdm
@@ -14,8 +17,6 @@ export XORG_PKGS=(
   xorg-xrandr
   xorg-xrdb
 )
-
-source common.sh
 
 case "$VIDEO" in
   nvidia)
@@ -31,6 +32,8 @@ case "$VIDEO" in
     panic "Only nvidia, intel and vmware supported"
 esac
 
+echo "Installing packages"
+
 yays "${XORG_PKGS[@]}"
 
 if [[ "$VIDEO" == vmware ]]; then
@@ -38,7 +41,18 @@ if [[ "$VIDEO" == vmware ]]; then
   sudo usermod -G vboxsf -a "$USERNAME"
 fi
 
-# Configure xorg
+echo "Copying xorg config files"
+
 sudo mkdir -p /etc/X11/xorg.conf.d
 sudo cp etc/X11/xorg.conf.d/00-keyboard.conf /etc/X11/xorg.conf.d/00-keyboard.conf
 sudo cp etc/X11/xorg.conf.d/30-touchpad.conf /etc/X11/xorg.conf.d/30-touchpad.conf
+
+echo "Configuring lightdm"
+if ! grep autologin /etc/group > /dev/null 2>&1; then
+  echo "Adding autologin group"
+  sudo groupadd -r autologin
+fi
+if ! grep autologin /etc/group | grep $USERNAME > /dev/null 2>&1; then
+  sudo gpasswd -a $USERNAME autologin
+fi
+sudo sed -i "s/#*\(autologin-user\)=.*/\1=$USERNAME/g" /etc/lightdm/lightdm.conf
